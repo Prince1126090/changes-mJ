@@ -1,0 +1,467 @@
+#{extends 'main.html' /}
+#{set title:'Beneficiary' /}
+
+<ul class="breadcrumb">
+    <li>
+        <a href="@{Beneficiaries.listBeneficiary(0,10)}">Beneficiaries</a> <span class="divider">/</span>
+    </li>
+    <li class="active">${beneficiary.UID}   ~   ${beneficiary.name}</li>
+</ul>
+
+
+
+
+#{form @submit(), class:'form-horizontal', method:'post', enctype:'multipart/form-data'}
+
+    #{if beneficiary?.id}
+    <input type="hidden" name="beneficiary.id" value="${beneficiary.id}"/>
+    #{/if}
+    
+     <table class="table">
+        <tr>
+        	<td><b>UID</b> </td><td>
+        	  #{field 'beneficiary.UID'}
+              <input type="text" id="${field.id}" name="${field.name}" value="${field.value}" readonly>
+              #{/field}
+        	</td>
+            <td></td><td></td>
+            <td><b>AC Area</b> </td><td>
+             #{field 'beneficiary.enrolledSector.tlPin.acArea'}
+              <input type="text" id="${field.id}" name="${field.name}" value="${field.value}" disabled>
+             #{/field}
+             </td>
+        </tr>
+        <tr>
+        	<td><b>Name</b> </td><td>
+        	  #{field 'beneficiary.name'}
+              <input type="text" id="${field.id}" name="${field.name}" value="${field.value}" readonly>
+              #{/field}
+              <input type="checkbox" id="changeName" onclick="showRowNewName()">Edit
+        	  </td>
+        	<td></td><td></td>
+            <td><b>TL Pin</b> </td><td>
+            #{field 'beneficiary.enrolledSector.tlPin'}
+              <input type="text" id="${field.id}" name="${field.name}" value="${field.value}" disabled>
+             #{/field}
+            </td>
+        </tr>
+        
+        
+        <tr id="rowNewName" bgcolor="#33FFE0">
+			<td><b>New Name</b> </td><td>
+              <input type="text" pattern="[A-Za-z .]{1,50}" title="no number, no special character except ." id="bnew_name" name="bnew.name" onkeyup="check()" disabled>
+			 </td>
+			<td></td><td></td>
+            <td><b>Confirm New Name</b> </td><td>
+             <input type="text" pattern="[A-Za-z .]{1,50}" title="no number, no special character except ." id="c_bnew_name" name="c.bnew.name" onkeyup="check()" disabled>
+            </td>
+        </tr>
+        
+         <tr>
+			<td><b>Husband's name</b> </td><td>
+
+			 #{field 'beneficiary.husbandName'}
+              <input type="text" id="${field.id}" name="${field.name}" value="${field.value}" readonly>
+             #{/field}
+             <input type="checkbox" id="changeHusbandName" onclick="showRowNewHusbandName()">Edit
+			 </td>
+			<td></td><td></td>
+            <td><b>Sector</b> </td><td>
+            #{field 'beneficiary.enrolledSector'}
+              <input type="text" id="${field.id}" name="${field.name}" value="${field.value}" disabled>
+             #{/field}
+            </td>
+        </tr>
+        
+        <tr id="rowNewHusbandName" bgcolor="#33FFE0">
+			<td><b>Husband's New Name</b> </td><td>
+			 <input type="text" pattern="[A-Za-z .]{1,50}" title="no number, no special character except ." id="bnew_husbandName" name="bnew.husbandName" onkeyup="check()" disabled>
+			 </td>
+			<td></td><td></td>
+            <td><b>Confirm Husband's New Name</b> </td><td>
+             <input type="text" pattern="[A-Za-z .]{1,50}" title="no number, no special character except ." id="c_bnew_husbandName" name="c.bnew.husbandName" onkeyup="check()" disabled>
+            </td>
+        </tr>
+        
+         <tr>
+			<td><b>NID</b> </td><td>
+			 #{field 'beneficiary.nID'}
+              <input type="text" id="${field.id}" name="${field.name}" value="${field.value}" readonly>
+             #{/field}
+             <input type="checkbox" id="changeNid" onclick="showRowNewNid()">Edit
+			 </td>
+			<td></td><td></td>
+            <td><b>Mauza</b> </td><td>
+             #{field 'beneficiary.mauza'}
+              <input type="text" id="${field.id}" name="${field.name}" value="${field.value}" disabled>
+             #{/field}
+            </td>
+        </tr>
+        
+        <tr id="rowNewNid" bgcolor="#33FFE0">
+			<td><b>New NID</b> </td><td>
+			 <input type="text" pattern="[0-9]{10}|[0-9]{13}|[0-9]{17}" title="10, 13 or 17 digit positive integer" id="bnew_nID" name="bnew.nID" onkeyup="check()" disabled>
+			 </td>
+			<td></td><td></td>
+            <td><b>Confirm New NID</b> </td><td>
+             <input type="text" pattern="[0-9]{10}|[0-9]{13}|[0-9]{17}" title="10, 13 or 17 digit positive integer" id="c_bnew_nID" name="c.bnew.nID" onkeyup="check()" disabled>
+            </td>
+        </tr>       
+        
+        <tr>
+			<td><b>BID</b> </td><td>
+			 #{field 'beneficiary.bID'}
+              <input type="text" id="${field.id}" name="${field.name}" value="${field.value}" readonly>
+             #{/field}
+             <input type="checkbox" id="changeBid" onclick="showRowNewBid()">Edit
+			 </td>
+			<td></td><td></td>
+            <td><b>HHID</b> </td><td>
+              #{field 'beneficiary.household.householdId'}
+    		  <input type="text" id="${field.id}" name="${field.name}" value="${field.value}" disabled>
+    		  #{/field}
+    		  
+            </td>
+        </tr>
+        
+        <tr id="rowNewBid" bgcolor="#33FFE0">
+			<td><b>New BID</b> </td><td>
+			 <input type="text" pattern="[0-9]{17}" title="17 digit positive integer" id="bnew_bID" name="bnew.bID" onkeyup="check()" disabled>
+			 </td>
+			<td></td><td></td>
+            <td><b>Confirm New BID</b> </td><td>
+             <input type="text" pattern="[0-9]{17}" title="17 digit positive integer" id="c_bnew_bID" name="c.bnew.bID" onkeyup="check()" disabled>
+            </td>
+        </tr>         
+        
+        <tr>
+			<td><b>Age</b> </td><td>
+			 #{field 'beneficiary.age'}
+              <input type="text" id="${field.id}" name="${field.name}" value="${field.value}" readonly>
+             #{/field}
+             <input type="checkbox" id="changeAge" onclick="showRowNewAge()">Edit
+			 </td>
+			<td></td><td></td>
+            <td></td><td></td>
+        </tr>
+        
+        <tr id="rowNewAge" bgcolor="#33FFE0">
+			<td><b>New Age</b> </td><td>
+			 <input type="text" pattern="[0-9]{2}" title="2 digit positive integer" id="bnew_age" name="bnew.age" onkeyup="check()" disabled>
+			 </td>
+			<td></td><td></td>
+            <td><b>Confirm New Age</b> </td><td>
+             <input type="text" pattern="[0-9]{2}" title="2 digit positive integer" id="c_bnew_age" name="c.bnew.age" onkeyup="check()" disabled>
+            </td>
+        </tr>
+        
+         <tr>
+			<td><b>Mobile No.</b> </td><td>
+			 #{field 'beneficiary.mobileNumber'}
+              <input type="text" id="${field.id}" name="${field.name}" value="${field.value}" readonly>
+             #{/field}
+             <input type="checkbox" id="changeMbNum" onclick="showRowNewMbNum()">Edit
+			 </td>
+			<td></td><td></td>
+            <td> </td><td>
+            </td>
+        </tr> 
+        
+        <tr id="rowNewMbNum" bgcolor="#33FFE0">
+			<td><b>New Mobile No.</b> </td><td>
+			 <input type="text" pattern="[0-9]{11}" title="11 digit positive integer" id="bnew_mbNum" name="bnew.mobileNumber" onkeyup="check()" disabled>
+			 </td>
+			<td></td><td></td>
+            <td><b>Confirm New Mobile No.</b> </td><td>
+             <input type="text" pattern="[0-9]{11}" title="11 digit positive integer" id="c_bnew_mbNum" name="c.bnew.mobileNumber" onkeyup="check()" disabled>
+            </td>
+        </tr>
+        
+        
+         <tr>
+			<td><b>LMP</b> </td><td>
+			 #{field 'beneficiary.lmp'}
+              <input type="text" id="${field.id}" name="${field.name}" value="${field.value}" disabled>
+             #{/field}
+			 </td>
+			<td></td><td></td>
+            <td> </td><td>
+             
+            </td>
+        </tr>
+        
+         <tr id="rowReason" bgcolor="#33FFE0">
+			<td> <b>Reason</b> </td><td>
+             <select id="reasonToChange" name="reasonToChange" required>
+                 <option value="">Make a selection</option>
+             	 #{list items: reasonList, as: 'reason' }
+   				 <option value="${reason}" >${reason}
+   				 </option>
+                 #{/list}
+             </select>
+            </td>
+			<td></td><td></td>
+            <td> <b>Remarks</b> </td><td>
+            <input type="text" id="remarks" name="remarks" maxlength="50" >
+            </td>
+        </tr> 
+        
+        
+        
+        
+<!--        
+         <tr>
+			<td><b>Status</b> </td><td>
+-----------------------------------------------
+             #{field 'beneficiary.status'}
+             <select id="${field.id}" name="${field.name}" readonly>
+             	 #{list items: bStatus, as: 'bStatus' }
+   				 <option value="${bStatus}" 
+   				 #{if beneficiary?.status == bStatus } selected #{/if}
+   				 >${bStatus}
+   				 
+   				 </option>
+                 #{/list}
+             </select>
+             #{/field}
+------------------------------------------------
+			 #{field 'beneficiary.status'}
+              <input type="text" id="${field.id}" name="${field.name}" value="${field.value}" readonly>
+             #{/field}
+			 
+			 
+			 </td>
+			 
+			<td></td><td></td>
+            <td></td><td>
+            
+            </td>
+        </tr>
+-->         
+        
+        
+        <input type="hidden" name="bnew.id" value="99999999"/>
+        <!--  
+        <tr id="rowCurrentName" bgcolor="#33FFE0">
+			<td><b>Current name</b> </td><td>
+              <input type="text" value="${beneficiary.name}" readonly>
+			 </td>
+			<td></td><td></td>
+            <td></td><td></td>
+        </tr>
+        -->
+        
+
+        
+        </table>
+
+    <div class="form-actions">
+    <button type="submit" class="btn btn-primary" id="submitUpdatedForm">Save changes</button>
+    <!--  <button type="reset" class="btn">Reset</button> -->
+    </div>
+    
+#{/form}
+
+<!--  
+  <div class="container-fluid">
+  <div class="row">
+  <div class="table-responsive span6">
+  <h3><b>Completed Form</b></h3>
+   <table class="table-bordered table-striped">
+        <thead>
+        <tr>
+            <th>Sender</th>
+        	<th>Form</th>
+        	<th>Date</th>
+
+        </tr>
+        </thead>
+    #{list items:allCompleteSchedules, as:'comSchedules'}
+      <tr >
+      <td>${comSchedules.data.sender}</td>
+      <td>${comSchedules.data.form}</td>
+      <td>${comSchedules.date.format("dd MMM, yyyy")}</td>  
+      </tr>
+  #{/list}
+    </table>
+</div>
+
+ <div class="table-responsive span6"> 
+ <h3><b>Due Form</b></h3>
+   <table class="table-bordered table-striped">
+        <thead>
+        <tr>
+        	<th>Form</th>
+        	<th>Date</th>
+
+        </tr>
+        </thead>
+    #{list items:allDueSchedules, as:'dueSchedules'}
+      <tr>
+      <td>${dueSchedules.data?.form}</td>
+      <td>${dueSchedules.date?.format("dd MMM, yyyy")}</td>  
+      </tr>
+  #{/list}
+    </table>
+</div>
+</div>
+</div>
+-->
+
+
+
+
+
+
+<script type="text/javascript">   
+
+var submitValue = 0;
+var checkedBoxCount = 0;
+
+$(document).ready(function() {
+	$("#rowNewName").hide();
+	$("#rowNewHusbandName").hide();
+	$("#rowNewNid").hide();
+	$("#rowNewBid").hide();
+	$("#rowNewAge").hide();
+	$("#rowNewMbNum").hide();
+	$("#rowReason").hide();
+	
+	 document.getElementById("submitUpdatedForm").disabled = true;
+});
+
+
+
+function checkIfSubmitable(){
+	if(submitValue % 2 === 1 && checkedBoxCount>0){
+		 showRowWOCheck("rowReason", "reasonToChange", "remarks");
+		 document.getElementById("submitUpdatedForm").disabled = false;
+	}else{
+		 hideRowWOCheck("rowReason", "reasonToChange", "remarks");
+		 document.getElementById("submitUpdatedForm").disabled = true;
+	}
+}
+
+
+// new_field.value == confirm_new_field.value ? 
+function fieldMatch(ckBox, newField, ConfirmNewField){
+	if (document.getElementById(ckBox).checked){
+		if($("#"+newField).val() !== $("#"+ConfirmNewField).val()){
+			return 1;
+		}else{return 0;}
+	}else{
+		return 0;
+	}
+}
+
+
+//check all rows
+function checkValidity(){
+	var mismatch =0;
+	mismatch += parseInt(fieldMatch("changeName", "bnew_name", "c_bnew_name" ));
+	mismatch += parseInt(fieldMatch("changeHusbandName", "bnew_husbandName", "c_bnew_husbandName" ));
+	mismatch += parseInt(fieldMatch("changeNid", "bnew_nID", "c_bnew_nID" ));
+	mismatch += parseInt(fieldMatch("changeBid", "bnew_bID", "c_bnew_bID" ));
+	mismatch += parseInt(fieldMatch("changeAge", "bnew_age", "c_bnew_age" ));
+	mismatch += parseInt(fieldMatch("changeMbNum", "bnew_mbNum", "c_bnew_mbNum" ));
+
+	if(mismatch > 0){
+		submitValue = 0;
+	}
+	else{
+		submitValue = 1;
+	}
+	
+}
+
+
+
+function check(){
+	  checkValidity();
+	  checkIfSubmitable();
+}
+
+
+
+function showRowNewName(){
+	  if (document.getElementById('changeName').checked){
+		  showRow("rowNewName", "bnew_name", "c_bnew_name");  
+	  } else {
+		  hideRow("rowNewName", "bnew_name", "c_bnew_name");
+	  }
+}
+
+
+function showRowNewHusbandName(){
+	  if (document.getElementById('changeHusbandName').checked){
+		  showRow("rowNewHusbandName", "bnew_husbandName", "c_bnew_husbandName"); 
+	  } else {
+		  hideRow("rowNewHusbandName", "bnew_husbandName", "c_bnew_husbandName"); 
+	  }
+}
+
+
+function showRowNewNid(){
+	  if (document.getElementById('changeNid').checked){
+		  showRow("rowNewNid", "bnew_nID", "c_bnew_nID");	
+	  } else {
+		  hideRow("rowNewNid", "bnew_nID", "c_bnew_nID");
+	  } 
+}
+
+
+function showRowNewBid(){
+	  if (document.getElementById('changeBid').checked){		  
+		  showRow("rowNewBid", "bnew_bID", "c_bnew_bID");		  		
+	  } else {
+		  hideRow("rowNewBid", "bnew_bID", "c_bnew_bID");
+	  }
+}
+
+function showRowNewAge(){
+	  if (document.getElementById('changeAge').checked){		  
+		  showRow("rowNewAge", "bnew_age", "c_bnew_age");		  		
+	  } else {
+		  hideRow("rowNewAge", "bnew_age", "c_bnew_age");
+	  }
+}
+
+
+function showRowNewMbNum(){
+	  if (document.getElementById('changeMbNum').checked){		  
+		  showRow("rowNewMbNum", "bnew_mbNum", "c_bnew_mbNum");		  		
+	  } else {
+		  hideRow("rowNewMbNum", "bnew_mbNum", "c_bnew_mbNum");
+	  }
+}
+
+
+function showRow(rowId, newFieldId, confirmFieldId){
+	  $("#"+rowId).show();
+	  document.getElementById(newFieldId).disabled = false;
+	  document.getElementById(confirmFieldId).disabled = false;
+	  checkedBoxCount++;
+	  check();
+}
+
+function hideRow(rowId, newFieldId, confirmFieldId){
+	  $("#"+rowId).hide();  
+	  document.getElementById(newFieldId).disabled = true;
+	  document.getElementById(confirmFieldId).disabled = true;
+	  checkedBoxCount--;
+	  check();  
+}
+
+function showRowWOCheck(rowId, newFieldId, confirmFieldId){
+	  $("#"+rowId).show();
+	  document.getElementById(newFieldId).disabled = false;
+	  document.getElementById(confirmFieldId).disabled = false;
+}
+
+function hideRowWOCheck(rowId, newFieldId, confirmFieldId){
+	  $("#"+rowId).hide();  
+	  document.getElementById(newFieldId).disabled = true;
+	  document.getElementById(confirmFieldId).disabled = true;
+}
+
+</script>

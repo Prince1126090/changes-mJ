@@ -1,0 +1,70 @@
+#{include 'head.html' /}
+<body>
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container-fluid">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+            <a class="brand" href="#">&{'application.name'}</a>
+            <div class="nav-collapse">
+                <ul class="nav">
+                    <li class="active"><a href="#">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                </ul>
+            #{if currentUser}
+                <ul class="nav pull-right">
+                    <li class="divider-vertical"></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">${currentUser?.displayName} <b
+                                class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Profile</a></li>
+                            <li class="divider"></li>
+                            <li><a href="@@{Secure.logout()}">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            #{/if}
+            </div>
+            <!--/.nav-collapse -->
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span3">
+        #{include 'sidebar.html' /}
+        </div><!--/span-->
+        <div class="span9">
+        #{doLayout /}
+        </div><!--/span-->
+    </div><!--/row-->
+
+    <hr>
+
+    <footer>
+        <p id="copyRight"></p>
+    </footer>
+
+</div>
+<!--/.fluid-container-->
+
+#{script src:'bootstrap.js' /}
+#{script src:'bootbox.js' /}
+#{script src:'main.js' /}
+<!-- Uniform -->
+#{script src:'jquery.uniform.min.js' /}
+
+#{get 'moreScripts' /}
+</body>
+</html>
+
+<script>
+var d = new Date();
+var n = d.getFullYear();
+document.getElementById("copyRight").innerHTML ="&copy; mPower Social Enterprises Ltd. "+n;
+</script>

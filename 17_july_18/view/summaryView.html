@@ -1,0 +1,468 @@
+#{extends 'main.html' /}
+#{set title:'Summary View' /}
+
+<div class="page-header top clearfix">
+    <h1 class="span12">Summary View </h1>
+</div>
+
+#{if currentJweek}
+<div class="page-header top clearfix">
+    <h3 class="span12">Jweek - ${currentJweek.jweekId} </h1>
+</div>
+#{/if}
+
+
+<div class="row-fluid">
+    <div class="span12">
+        <div class="row-fluid">
+            <form id=id="myForm" action="@{Reports.summaryView()}" method="GET">
+
+                <fieldset>
+
+                    <div class="span4 clearfix">
+                        <label class="control-label" for="jweek.id">From JWeek</label>
+                        <select name="jweek.fromid" id="jfromdate" size="1" id="jweek.id" class="input-medium">
+                            <option value="">Any</option>
+                        #{list items: jweeks, as : 'jweek'}
+                            <option value="${jweek.id}"
+                                    #{if jweekFromId.equals(""+jweek.id)}selected="selected"#{/if} >${jweek}</option>
+                        #{/list}
+                        </select>
+                    </div>
+
+
+                    <div class="span4 clearfix">
+                        <label class="control-label" for="jweek.id">To JWeek</label>
+                        <select name="jweek.toid" id="jtodate" size="1" id="jweek.id" class="input-medium">
+                            <option value="">Any</option>
+                        #{list items: jweeks, as : 'jweek'}
+                            <option value="${jweek.id}"
+                                    #{if jweekToId.equals(""+jweek.id)}selected="selected"#{/if} >${jweek}</option>
+                        #{/list}
+                        </select>
+                    </div>
+
+                </fieldset>
+
+
+            *{	<fieldset>
+				<div id="Jfrom" class="span3 geo" url="@{Reports.loadJweekFromDate}" load-data-container="#JfromDate" >
+			
+				#{input 'jweek.id', type:'select', items : jweeks, labelProperty : 'name', class:'input-medium'}
+					#{option}
+						Any
+					#{/option}
+				#{/input}
+				</div>
+				
+				<div id="JfromDate">
+				
+			</fieldset> }*
+
+
+                <fieldset>
+                    <!-- Success & Error Modal -->
+                    <div class=" span12 updatedsucess alert-success" style="display: none;"
+                    ">
+                    <a class="close" onclick="$('.updatedsucess').hide()">×</a>
+                    <strong>Success!</strong>Data updated successfully.
+        </div>
+        <div class="dateerror alert-error" style="display: none;">
+        <a class="close" onclick="$('.dateerror').hide()">×</a>
+        <strong>Error!</strong> You can't select an invalid date
+    </div>
+    </fieldset>
+    <fieldset>
+        <div id="fromDateDiv" class="span4 clearfix">
+            <label>From<i class="muted">(mm/dd/yyyy)</i></label>
+            <div class="input">
+                <div class="inline-inputs">
+                    <input name="fromDate" id="fromDate" data-datepicker="datepicker" class="input-medium" type="text"
+                           value="${fromDate?fromDate:'01/01/2014'}" readonly="readonly"/>
+                </div>
+            </div>
+        </div><!-- /clearfix -->
+        <div class="span4 clearfix">
+            <label>To<i class="muted">(mm/dd/yyyy)</i></label>
+            <div class="input">
+                <div id="toinput" class="inline-inputs">
+                    <input name="toDate" id="toDate" data-datepicker="datepicker" class="small input-medium" type="text"
+                           value="${toDate?toDate:'12/31/2014'}" readonly="readonly"/>
+                </div>
+            </div>
+        </div><!-- /clearfix -->
+    </fieldset>
+
+    <fieldset>
+        <input class="btn btn-primary" id="filter-button" type="submit" value="Show"/>
+    </fieldset>
+    </form>
+</div>
+</div>
+</div>
+
+<div id="div1">
+#{if error}
+    <p>Jweek date Out of Range</p>
+#{/if}
+</div>
+
+<table class="table table-bordered">
+<tr>
+<div id="container" style="min-width: 300px; height: auto; margin: 0 auto"></div>
+</tr>
+
+<tr>
+<div id="container1" style="min-width: 300px; height: 400px; margin: 0 auto"></div>
+</tr>
+</table>
+
+<div class="span6">
+    <table class="table table-striped">
+    #{if !error}
+        <thead>
+        <tr>
+            #{if fromJweek}
+                <th>Summary View of JWeek ${fromJweek} - ${toJweek}</th>
+            #{/if}
+        </tr>
+        <thead>
+        <tbody>
+        <tr>
+        *{<td>${tl.tlPinId}</td>}*
+            <td>Number of New Household</td>
+            <td id="newHousehold">${numNewHousehold}</td>
+        </tr>
+        <tr>
+            <td>Number of Moved Household</td>
+            <td id="movedHousehold">${numMovedHousehold}</td>
+        </tr>
+        <tr>
+            <td>Number of Deleted Household</td>
+            <td id="deletedHousehold">${numDeletedHousehold}</td>
+        </tr>
+        <tr>
+            <td>Number of NWRM Completed</td>
+            <td>${numNWRMCompleted}</td>
+        </tr>
+        <tr>
+            <td>Number of NWVM Scheduled</td>
+            <td>${numNWVMScheduled}</td>
+        </tr>
+        <tr>
+            <td>Number of NWVM Completed</td>
+            <td>${numNWVMCompleted}</td>
+        </tr>
+        <tr>
+            <td>Number of PSRF Completed</td>
+            <td>${numPSRFCompleted}</td>
+        </tr>
+        <tr>
+            <td>Number of PSRF Scheduled</td>
+            <td>${numPSRFScheduled}</td>
+        </tr>
+        <tr>
+            <td>Number of PVF Completed</td>
+            <td>${numPVFCompleted}</td>
+        </tr>
+        <tr>
+            <td>Number of PVF Scheduled</td>
+            <td>${numPVFScheduled}</td>
+        </tr>
+    <tbody>
+    #{/if}
+    </table>
+</div>
+
+
+
+<table id="datatable">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Completed</th>
+            <th>Scheduled</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th>NWRM</th>
+            <td>${numNWRMCompleted}</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <th>NWVM</th>
+            <td>${numNWVMCompleted}</td>
+            <td>${numNWVMScheduled}</td>
+        </tr>
+        <tr>
+            <th>PSRF</th>
+            <td>${numPSRFCompleted}</td>
+            <td>${numPSRFScheduled}</td>
+        </tr>
+        <tr>
+            <th>PVF</th>
+            <td>${numPVFCompleted}</td>
+            <td>${numPVFScheduled}</td>
+        </tr>
+    </tbody>
+</table>
+
+
+
+
+
+#{set 'moreScripts'}
+    #{script 'bootstrap-datepicker_latest.js' /}
+    #{script 'jquery.mpower.utils.js' /}
+    #{script 'jquery-mpower-date.js' /}
+    #{script 'mpower-geolocation.js' /}
+#{/set}
+<!-- datepicker CSS -->
+#{set 'moreStyles'}
+    #{stylesheet 'datepicker_latest.css'/}
+#{/set}
+
+<script type="text/javascript" language="javascript"  src="/public/javascripts/highcharts/highcharts.js"></script>
+<script type="text/javascript" language="javascript"  src="/public/javascripts/highcharts/exporting.js"></script>
+<script type="text/javascript" language="javascript"  src="/public/javascripts/highcharts/export-data.js"></script>
+<script type="text/javascript" language="javascript"  src="/public/javascripts/highcharts/data.js"></script>
+<script type='text/javascript' language="javascript">
+    var newHousehold;
+    var movedHousehold;
+    var deletedHousehold;
+    var rl=zeros([3, 2]);
+
+    $(document).ready(function() {
+    	newHousehold = $("#newHousehold").text();
+        movedHousehold = $("#movedHousehold").text();
+        deletedHousehold = $("#deletedHousehold").text();
+        $("#datatable").hide();
+    	showChart();
+    	chartForm();
+
+    });
+
+    function zeros(dimensions) {
+        var array = [];
+
+        for (var i = 0; i < dimensions[0]; ++i) {
+            array.push(dimensions.length == 1 ? 0 : zeros(dimensions.slice(1)));
+        }
+
+        return array;
+    }
+    
+    function chartForm(){
+    	Highcharts.chart('container1', {
+    	    data: {
+    	        table: 'datatable'
+    	    },
+    	    chart: {
+    	        type: 'column'
+    	    },
+    	    title: {
+    	        text: 'Forms'
+    	    },
+    	    yAxis: {
+    	        allowDecimals: false,
+    	        title: {
+    	            text: 'Quantity'
+    	        }
+    	    },
+    	    tooltip: {
+    	        formatter: function () {
+    	            return '<b>' + this.series.name + '</b><br/>' +
+    	                this.point.y + ' ' + this.point.name.toLowerCase();
+    	        }
+    	    }
+    	});
+    }
+
+    function showChart(){
+
+    	rl[0][0] = "New";
+    	rl[1][0] = "Moved";
+    	rl[2][0] = "Deleted";
+    	
+    	rl[0][1] = parseInt(newHousehold);
+    	rl[1][1] = parseInt(movedHousehold);
+    	rl[2][1] = parseInt(deletedHousehold);
+    	
+    	Highcharts.chart('container', {
+    	    chart: {
+    	        type: 'column'
+    	    },
+    	    title: {
+    	        text: 'Household'
+    	    },
+    	    xAxis: {
+    	        type: 'category',
+    	        labels: {
+    	            rotation: -45,
+    	            style: {
+    	                fontSize: '13px',
+    	                fontFamily: 'Verdana, sans-serif'
+    	            }
+    	        }
+    	    },
+    	    yAxis: {
+    	        min: 0,
+    	        title: {
+    	            text: 'Quantity'
+    	        }
+    	    },
+    	    legend: {
+    	        enabled: false
+    	    },
+    	    tooltip: {
+    	        pointFormat: 'Number of Household : <b>{point.y:.0f} </b>'
+    	    },
+    	    series: [{
+    	        name: 'Population',
+    	        
+    	         data: rl,
+    	       // data: ${result},
+    	        dataLabels: {
+    	            enabled: true,
+    	            rotation: -90,
+    	            color: '#FFFFFF',
+    	            align: 'right',
+    	            format: '{point.y:.0f}', // .1f = one decimal
+    	            y: 10, // 10 pixels down from the top
+    	            style: {
+    	                fontSize: '13px',
+    	                fontFamily: 'Verdana, sans-serif'
+    	            }
+    	        }
+    	    }]
+    	});
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    $('#jfromdate').on('change', function () {
+
+        if (($(jfromdate).val())) {
+            $("#fromDateDiv").show();
+        }
+        else {
+            $("#fromDateDiv").hide();
+        }
+
+        var fromJweek = $('#jfromdate').val();
+        var toJweek = $('#jtodate').val();
+        var fromDate = $('#fromDate').val();
+        var toDate = $('#toDate').val();
+
+
+        var request = $.ajax({
+            url: "@{Reports.loadDateFrom}",
+            type: "GET",
+            async: false,
+            data: {fromJweek: fromJweek, toJweek: toJweek, fromDate: fromDate, toDate: toDate},
+            //  data: fromJweek + '&' + toJweek
+        });
+
+        request.done(function (ret) {
+
+            $("#fromDate").val(ret);
+            // $('form').submit();
+            //  document.getElementById("myForm").submit();
+
+            //  $("#toinput").html(ret);
+            // alert(ret);
+            // $('#toDate').datepicker('setDate', '04/01/2012');
+            //$('.datepicker').val('04/01/2012');
+            //alert('Data updated successfully.');
+        });
+
+        request.error(function (ret) {
+            alert('Error occurred during updating data.');
+        });
+
+
+    });
+
+    $('#jtodate').on('change', function () {
+
+        var fromJweek = $('#jfromdate').val();
+        var toJweek = $('#jtodate').val();
+        var fromDate = $('#fromDate').val();
+        var toDate = $('#toDate').val();
+
+        // this.form.submit();
+
+        // document.getElementById("myForm").submit();
+
+        // alert(fromDate);
+
+        var request = $.ajax({
+            url: "@{Reports.loadDateTo}",
+            type: "GET",
+            async: false,
+            data: {fromJweek: fromJweek, toJweek: toJweek, fromDate: fromDate, toDate: toDate},
+            //  data: fromJweek + '&' + toJweek
+        });
+
+        request.done(function (ret) {
+
+            $("#toDate").val(ret);
+            //$('form').submit();
+            //  document.getElementById("myForm").submit();
+
+            //  $("#toinput").html(ret);
+            // alert(ret);
+            // $('#toDate').datepicker('setDate', '04/01/2012');
+            //$('.datepicker').val('04/01/2012');
+            //alert('Data updated successfully.');
+        });
+
+        request.error(function (ret) {
+            alert('Error occurred during updating data.');
+        });
+
+
+        /* $.ajax({
+                 url:"/summaryView",
+                  url: "@{Reports.summaryView}",
+		  type: "POST",
+		  data: $('#jtodate').val(),
+	 		success:function(result){
+    //  $("#div1").html(result);
+    }});*/
+
+        /* $.ajax({
+                  /* url: '@Url.Action("summaryView", "Jquery")',
+                   type: 'GET',
+                   dataType: 'json',
+                   data: { jweek.toid : jweekToId },
+                   cache: false,
+
+                   success: function (Data) {
+                       if (Data.ok) {
+                          redirect current page to new view products->action method, jquery->controller.
+                           var link = "@Url.Action("Products", "Jquery", new { categoryid = "catid" })";
+                           link = link.replace("catid", Data.catid);
+                           alert(link);
+                           window.location.href = link;
+
+                       }
+                   }
+               });
+
+         */
+
+        //  this.form.submit();
+        //  var action = '@{Reports.summaryView()}';
+    });
+
+
+</script>

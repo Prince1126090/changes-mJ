@@ -1,0 +1,211 @@
+<div class="well sidebar-nav">
+    <ul class="nav nav-list">
+    #{deadbolt.externalizedRestriction externalRestrictions:['Summary View']}
+        <li#{if 'Reports.summaryView' == request.action} class="active"#{/if}><a href="@{Reports.summaryView()}"><i
+                class="icon-file"></i> Summary View </a></li>
+    #{/deadbolt.externalizedRestriction}
+    
+    
+    
+    <li#{if 'Charts.summaryChart' == request.action} class="active"#{/if}><a href="@{Charts.summaryChart()}"><i
+                class="icon-file"></i> Summary Chart </a></li>
+    
+    
+    #{deadbolt.externalizedRestriction externalRestrictions:['Field Status']}
+        <li#{if 'Reports.index' == request.action || 'Reports.index' == request.action} class="active"#{/if}><a
+                href="@{Reports.index()}"><i class="icon-globe"></i> Field Status</a></li>
+    #{/deadbolt.externalizedRestriction}
+    
+    
+    <li#{if 'Beneficiaries.listBeneficiary' == request.action} class="active"#{/if}><a
+                href="@{Beneficiaries.listBeneficiary(0,10)}">Beneficiaries</a></li>
+             
+    #{deadbolt.externalizedRestriction externalRestrictions:['View BeneficiaryChangeLog']}            
+    <li#{if 'Beneficiaries.beneficiaryChangeLog' == request.action} class="active"#{/if}><a
+                href="@{Beneficiaries.beneficiaryChangeLog(0,10)}">Beneficiary Change Log</a></li>
+    #{/deadbolt.externalizedRestriction}
+     
+     <li#{if 'Beneficiaries.osrpTransferLog' == request.action} class="active"#{/if}><a
+                href="@{Beneficiaries.osrpTransferLog}">OpenSRP Transfer Log</a></li>
+    
+    
+    
+
+    #{deadbolt.externalizedRestriction externalRestrictions:['View Form', 'Edit Form']}
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                Forms <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                #{deadbolt.externalizedRestriction externalRestrictions:['Edit Form']}
+                    <li#{if 'Forms.create' == request.action} class="active"#{/if}><a href="@{Forms.create()}"><i
+                            class="icon-plus"></i> New Form</a></li>
+                #{/deadbolt.externalizedRestriction}
+                #{deadbolt.externalizedRestriction externalRestrictions:['View Form']}
+                    <li#{if 'Forms' == request.controller && 'create' != request.actionMethod && 'cancelDuration' != request.actionMethod}
+                            class="active"#{/if}><a href="@{Forms.list()}"><i class="icon-list"></i> List Forms</a></li>
+                #{/deadbolt.externalizedRestriction}
+                #{deadbolt.externalizedRestriction externalRestrictions:['Edit Form']}
+                    <li#{if 'Forms.cancelDuration' == request.action} class="active"#{/if}><a
+                            href="@{Forms.cancelDuration()}"><i class="icon-plus"></i> Cancel Form</a></li>
+                #{/deadbolt.externalizedRestriction}
+                #{deadbolt.externalizedRestriction externalRestrictions:['Export Data']}
+                    <li#{if 'ExportController.exportList' == request.action} class="active"#{/if}><a
+                            href="@{ExportController.exportList()}"><i class="icon-plus"></i>Export Data</a></li>
+                #{/deadbolt.externalizedRestriction}
+            </ul>
+        </li>
+    #{/deadbolt.externalizedRestriction}
+
+    #{deadbolt.externalizedRestriction externalRestrictions:['View User', 'Edit User', 'View Role', 'Edit Role', 'ACL']}
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                Mapping <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                #{deadbolt.externalizedRestriction externalRestrictions:['Edit Union']}
+                    <li#{if 'Areas.createGeoUnion' == request.action ||
+                    'Areas.submitGeoUnion' == request.action} class="active"#{/if}><a
+                            href="@{Areas.createGeoUnion()}"><i class="icon-plus"></i>New Union</a></li>
+                #{/deadbolt.externalizedRestriction}
+                #{deadbolt.externalizedRestriction externalRestrictions:['View Union']}
+                    <li#{if 'Areas.listGeoUnion' == request.action
+                    || 'Areas.editGeoUnion' == request.action} class="active"#{/if}><a href="@{Areas.listGeoUnion()}"><i
+                            class="icon-list"></i>List Unions</a></li>
+                #{/deadbolt.externalizedRestriction}
+
+                #{deadbolt.externalizedRestriction externalRestrictions:['Edit AC Area']}
+                    <li#{if 'Areas.createACArea' == request.action ||
+                    'Areas.editACArea' == request.action ||
+                    'Areas.submitACArea' == request.action} class="active"#{/if}><a href="@{Areas.createACArea()}"><i
+                            class="icon-plus"></i>New AC Area</a></li>
+                #{/deadbolt.externalizedRestriction}
+                #{deadbolt.externalizedRestriction externalRestrictions:['View AC Area']}
+                    <li#{if 'Areas.listACArea' == request.action} class="active"#{/if}><a
+                            href="@{Areas.listACArea()}"><i class="icon-list"></i>List AC Areas</a></li>
+                #{/deadbolt.externalizedRestriction}
+
+                #{deadbolt.externalizedRestriction externalRestrictions:['Edit TL Pin']}
+                    <li#{if 'Areas.createTLPin' == request.action
+                    ||'Areas.submitTLPin' == request.action} class="active"#{/if}><a href="@{Areas.createTLPin()}"><i
+                            class="icon-plus"></i>New TL Pin</a></li>
+                #{/deadbolt.externalizedRestriction}
+                #{deadbolt.externalizedRestriction externalRestrictions:['View TL Pin']}
+                    <li#{if 'Areas.listTLPin' == request.action
+                    || 'Areas.editTLPin' == request.action} class="active"#{/if}><a href="@{Areas.listTLPin()}"><i
+                            class="icon-list"></i>List TL Pins</a></li>
+                #{/deadbolt.externalizedRestriction}
+
+                #{deadbolt.externalizedRestriction externalRestrictions:['Edit Sector']}
+                    <li#{if 'Areas.createSector' == request.action
+                    || 'Areas.submitSector' == request.action} class="active"#{/if}><a href="@{Areas.createSector()}"><i
+                            class="icon-plus"></i>New Sector</a></li>
+                #{/deadbolt.externalizedRestriction}
+                #{deadbolt.externalizedRestriction externalRestrictions:['View Sector']}
+                    <li#{if 'Areas.listSector' == request.action
+                    || 'Areas.editSector' == request.action
+                    } class="active"#{/if}><a href="@{Areas.listSector()}"><i class="icon-list"></i>List Sectors</a>
+                    </li>
+                #{/deadbolt.externalizedRestriction}
+
+                #{deadbolt.externalizedRestriction externalRestrictions:['Edit Mauza']}
+                    <li#{if 'Areas.createMauza' == request.action
+                    || 'Areas.submitMauza' == request.action} class="active"#{/if}><a href="@{Areas.createMauza()}"><i
+                            class="icon-plus"></i>New Mauza</a></li>
+                #{/deadbolt.externalizedRestriction}
+                #{deadbolt.externalizedRestriction externalRestrictions:['View Mauza']}
+                    <li#{if 'Areas.listMauza' == request.action
+                    || 'Areas.editMauza' == request.action
+                    } class="active"#{/if}><a href="@{Areas.listMauza()}"><i class="icon-list"></i>List Mauzas</a></li>
+                #{/deadbolt.externalizedRestriction}
+            </ul>
+        </li>
+    #{/deadbolt.externalizedRestriction}
+
+    #{deadbolt.externalizedRestriction externalRestrictions:['View User', 'Edit User', 'View Role', 'Edit Role', 'ACL']}
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                Users <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                #{deadbolt.externalizedRestriction externalRestrictions:['Edit User']}
+                    <li#{if 'Users.create' == request.action} class="active"#{/if}><a href="@{Users.create()}"><i
+                            class="icon-plus"></i> New User</a></li>
+                #{/deadbolt.externalizedRestriction}
+
+                #{deadbolt.externalizedRestriction externalRestrictions:['View User']}
+                    <li#{if 'Users.list' == request.action ||
+                    'Users.details' == request.action ||
+                    'Users.edit' == request.action} class="active"#{/if}><a href="@{Users.list()}"><i
+                            class="icon-list"></i> List Users</a></li>
+                #{/deadbolt.externalizedRestriction}
+
+                #{deadbolt.externalizedRestriction externalRestrictions:['Edit User']}
+                    #{deadbolt.externalizedRestriction externalRestrictions:['Edit Role']}
+                        <li#{if 'Users.roleCreate' == request.action} class="active"#{/if}><a
+                                href="@{Users.roleCreate()}"><i class="icon-plus"></i> New Role</a></li>
+                    #{/deadbolt.externalizedRestriction}
+                    #{deadbolt.externalizedRestriction externalRestrictions:['View Role']}
+                        <li#{if 'Users.roleList' == request.action || 'Users.roleEdit' == request.action}
+                                class="active"#{/if}><a href="@{Users.roleList()}"><i class="icon-list"></i> List Roles</a>
+                        </li>
+                    #{/deadbolt.externalizedRestriction}
+                #{/deadbolt.externalizedRestriction}
+            </ul>
+        </li>
+    #{/deadbolt.externalizedRestriction}
+
+    #{deadbolt.externalizedRestriction externalRestrictions:['Edit Batch', 'View Batch', 'Edit Round', 'View Round', 'Edit JWeek', 'View JWeek']}
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                Others <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                #{deadbolt.externalizedRestriction externalRestrictions:['Edit Batch']}
+                    <li#{if 'Areas.createBatch' == request.action} class="active"#{/if}><a
+                            href="@{Areas.createBatch()}"><i class="icon-plus"></i> New Batch</a></li>
+                #{/deadbolt.externalizedRestriction}
+
+                #{deadbolt.externalizedRestriction externalRestrictions:['View Batch']}
+                    <li#{if 'Areas.listBatch' == request.action} class="active"#{/if}><a href="@{Areas.listBatch()}"><i
+                            class="icon-list"></i> List Batches</a></li>
+                #{/deadbolt.externalizedRestriction}
+
+                #{deadbolt.externalizedRestriction externalRestrictions:['Edit Round']}
+                    <li#{if 'Areas.createRound' == request.action} class="active"#{/if}><a
+                            href="@{Areas.createRound()}"><i class="icon-plus"></i> New Round</a></li>
+                #{/deadbolt.externalizedRestriction}
+
+                #{deadbolt.externalizedRestriction externalRestrictions:['View Round']}
+                    <li#{if 'Areas.listRound' == request.action
+                    || 'Areas.editRound' == request.action
+                    || 'Areas.detailRound' == request.action} class="active"#{/if}><a href="@{Areas.listRound()}"><i
+                            class="icon-list"></i> List Rounds</a></li>
+                #{/deadbolt.externalizedRestriction}
+
+                #{deadbolt.externalizedRestriction externalRestrictions:['Edit JWeek']}
+                    <li#{if 'Areas.createJWeek' == request.action} class="active"#{/if}><a
+                            href="@{Areas.createJWeek()}"><i class="icon-plus"></i> New JWeek</a></li>
+                #{/deadbolt.externalizedRestriction}
+
+                #{deadbolt.externalizedRestriction externalRestrictions:['View JWeek']}
+                    <li#{if 'Areas.listJWeek' == request.action} class="active"#{/if}><a href="@{Areas.listJWeek()}"><i
+                            class="icon-list"></i> List JWeeks</a></li>
+                #{/deadbolt.externalizedRestriction}
+            </ul>
+        </li>
+    #{/deadbolt.externalizedRestriction}
+
+    #{deadbolt.externalizedRestriction externalRestrictions:['Upload CSV']}
+        <li#{if 'Imports.importCSV' == request.action} class="active"#{/if}><a href="@{Imports.importCSV()}"><i
+                class="icon-upload"></i> CSV Uploader </a></li>
+    #{/deadbolt.externalizedRestriction}
+
+
+    #{deadbolt.externalizedRestriction externalRestrictions:['ACL']}
+        <li#{if 'Users.acl' == request.action} class="active"#{/if}><a href="@{Users.acl()}"><i class="icon-cog"></i>
+            Access Control List</a></li>
+    #{/deadbolt.externalizedRestriction}
+    </ul>
+</div>
+<!--/.well -->
