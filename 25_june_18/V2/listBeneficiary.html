@@ -1,0 +1,181 @@
+#{extends 'main.html' /}
+#{set title:'Beneficiary' /}
+
+
+
+  Search : <input type="text" name="searchField" id="searchField" onchange="search(0)"><br>
+  <table id="dataTable" class="table table-striped" >
+        <thead>
+        <tr>
+        	<th>Id</th>
+            <th>Name</th>
+            <th>Husband's Name</th>
+            <th>NId</th>
+            <th>LMP</th>
+            <th>Age</th>
+            
+        </tr>
+        </thead>
+        <p id="dataDiv"></p>
+  #{list items:allBeneficiaries, as:'beneficiary'}
+        <tr>
+            <td>${beneficiary.UID}</td>
+            <td>${beneficiary.name}</td>
+            <td>${beneficiary.husbandName}</td>
+            <td>${beneficiary.nID}</td>
+            <td>${beneficiary.lmp}</td>
+            <td>${beneficiary.age}</td>
+            <td>
+               
+             <a class="btn" href="@{Apis.viewBeneficiary(beneficiary.UID)}"><i class="icon-tasks"></i>Data</a>
+                
+            </td>
+        </tr>
+        
+  #{/list}
+  
+  </table>
+    
+  <button class="btn" id="prev" onclick="previous()"><< Previous </button>  
+  <button class="btn" id="next" onclick="next()">Next >></button>
+  <button class="btn" id="prevSrc" onclick="prevSearch()"><< Previous results </button>  
+  <button class="btn" id="nextSrc" onclick="nextSearch()">Next results >></button>
+  
+    
+<script type="text/javascript">   
+var searchFrom = 0;
+$(document).ready(function() {
+
+    var url_string = window.location.href;
+    var url = new URL(url_string);
+    var from_pos = url.searchParams.get("from");
+    var count = url.searchParams.get("count");
+
+    if (parseInt(from_pos) < 10) {
+        document.getElementById("prev").disabled = true;
+    } else {
+        document.getElementById("prev").disabled = false;
+    }
+    
+    $("#prevSrc").hide();
+    $("#nextSrc").hide();
+
+});
+
+function search(from) {
+	
+    //alert($("#searchField").val());
+    $.ajax('@@{Apis.searchBeneficiary()}', {
+        type: 'POST',
+        data: {
+            searchInput: $("#searchField").val(),
+            from: parseInt(from)
+        }
+    }).done(function(data) {
+        var rowCount = $('#dataTable tr').length;
+
+        for (i = 1; i < rowCount; i++) {
+            document.getElementById("dataTable").deleteRow(1);
+        }
+
+        for (j = 0; j < data.length; j++) {
+            var table = document.getElementById("dataTable");
+            var row = table.insertRow(1);
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
+            var cell4 = row.insertCell(3);
+            var cell5 = row.insertCell(4);
+            var cell6 = row.insertCell(5);
+            var cell7 = row.insertCell(6);
+
+            cell1.innerHTML = data[j].UID? data[j].UID : "";
+            cell2.innerHTML = data[j].name? data[j].name : "";
+            cell3.innerHTML = data[j].husbandName? data[j].husbandName : "";
+            cell4.innerHTML = data[j].nID? data[j].nID : "" ;
+            cell5.innerHTML = data[j].lmp? data[j].lmp : "";
+            cell6.innerHTML = data[j].age? data[j].age : "" ;
+            cell7.innerHTML = "<a class=\"btn\" href=\"/apis/viewBeneficiary?UID=" + parseInt(data[j].UID) + "\"><i class=\"icon-tasks\"></i>Data</a>";
+
+        }
+        searchFrom = from;
+        activateNextSearchBtn();
+        
+        //$("#dataDiv").text(data[0].UID);
+    }).error(function() {
+        //alert('Error');
+    });
+}
+
+function activateNextSearchBtn() {
+	  $("#prev").hide();
+      $("#next").hide();
+      $("#prevSrc").show();
+      $("#nextSrc").show();
+      
+      if (parseInt(searchFrom) < 10) {
+          document.getElementById("prevSrc").disabled = true;
+      } else {
+          document.getElementById("prevSrc").disabled = false;
+      }
+      
+      var rowQnt = $('#dataTable tr').length;
+      
+      if (parseInt(rowQnt) < 10) {
+          document.getElementById("nextSrc").disabled = true;
+      } else {
+          document.getElementById("nextSrc").disabled = false;
+      }
+      
+}
+
+function next() {
+    var url_string = window.location.href;
+    var url = new URL(url_string);
+    var from_pos = url.searchParams.get("from");
+    var count = url.searchParams.get("count");
+
+    if (parseInt(from_pos) < 0) {
+        from_pos = 0;
+    }
+
+    var new_from = 10 + parseInt(from_pos);
+
+
+
+    var new_url_string = "/apis/listbeneficiary?count=" + count + "&from=" + new_from;
+    window.location = new_url_string;
+
+}
+
+function previous() {
+    var url_string = window.location.href;
+    var url = new URL(url_string);
+    var from_pos = url.searchParams.get("from");
+    var count = url.searchParams.get("count");
+
+
+    var new_from = parseInt(from_pos) - 10;
+
+
+    var new_url_string = "/apis/listbeneficiary?count=" + count + "&from=" + new_from;
+    window.location = new_url_string;
+
+}
+
+function prevSearch(){
+	searchFrom = searchFrom >= 10? (searchFrom- 10) : 0;
+	search(searchFrom);
+}
+
+function nextSearch(){
+	searchFrom += 10;
+	search(searchFrom);
+	
+	if (parseInt(searchFrom) < 10) {
+        document.getElementById("prevSrc").disabled = true;
+    } else {
+        document.getElementById("prevSrc").disabled = false;
+    }
+}
+</script>
