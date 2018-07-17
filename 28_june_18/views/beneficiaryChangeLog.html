@@ -1,0 +1,241 @@
+#{extends 'main.html' /}
+#{set title:'Beneficiary' /}
+
+
+                <div class="span4 clearfix">
+                    <label>From<i class="muted">(mm/dd/yyyy)</i></label>
+                    <div class="input">
+                        <div class="inline-inputs">
+                            <input name="fromDate" id="fromDate" data-datepicker="datepicker" class="input-medium"/>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="span4 clearfix">
+                    <label>To<i class="muted">(mm/dd/yyyy)</i></label>
+                    <div class="input">
+                        <div class="inline-inputs">
+                            <input name="toDate" id="toDate" data-datepicker="datepicker" class="small input-medium"/>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="span4 clearfix">
+                  <label>. . . . . . . . . .</label>
+                    <div class="input">
+                        <div class="inline-inputs">
+                          <button class="btn" onclick="searchBCLByDate(0)">Search</button>
+                        </div>
+                    </div>
+                </div>
+
+
+
+  <table id="dataTable" class="table table-striped" >
+        <thead>
+        <tr>
+        	<th>UID</th>
+            <th>Field-name</th>
+            <th>Old Value</th>
+            <th>New Value</th>
+            <th>Changed By</th>
+            <th>Edited At</th>
+            <th>Reason For Change</th>
+            <th>Remarks</th>
+            
+        </tr>
+        </thead>
+        <p id="dataDiv"></p>
+  #{list items:bCLArrayList, as:'benChangeLog'}
+        <tr>
+            <td>${benChangeLog.UID}</td>
+            <td>${benChangeLog.fieldName}</td>
+            <td>${benChangeLog.oldValue}</td>
+            <td>${benChangeLog.newValue}</td>
+            <td>${benChangeLog.updatedBy}</td>
+            <td>${benChangeLog.created_at.format("dd MMM, yyyy")}</td>
+            <td>${benChangeLog.reason}</td>
+            <td>${benChangeLog.remarks}</td>
+            
+        </tr>
+        
+  #{/list}
+  
+  </table>
+  
+  <button class="btn" id="prev" onclick="previous()"><< Previous </button>  
+  <button class="btn" id="next" onclick="next()">Next >></button>
+  <button class="btn" id="prevSrc" onclick="prevSearch()"><< Previous results </button>  
+  <button class="btn" id="nextSrc" onclick="nextSearch()">Next results >></button>
+  
+  
+  #{set 'moreScripts'}
+    #{script 'bootstrap-datepicker_latest.js' /}
+    #{script 'jquery.mpower.utils.js' /}
+    #{script 'jquery-mpower-date.js' /}
+    #{script 'mpower-geolocation.js' /}
+
+#{/set}
+
+<!-- datepicker CSS -->
+#{set 'moreStyles'}
+    #{stylesheet 'datepicker_latest.css'/}
+#{/set}
+
+<script type="text/javascript">   
+var searchFrom = 0;
+$(document).ready(function() {
+
+    var url_string = window.location.href;
+    var url = new URL(url_string);
+    var from_pos = url.searchParams.get("from");
+    var count = url.searchParams.get("count");
+
+    if (parseInt(from_pos) < 10) {
+        document.getElementById("prev").disabled = true;
+    } else {
+        document.getElementById("prev").disabled = false;
+    }
+    var rowCount = $('#dataTable tr').length;
+    if (parseInt(rowCount) < 10) {
+        document.getElementById("next").disabled = true;
+    } else {
+        document.getElementById("next").disabled = false;
+    }
+    
+    
+    $("#prevSrc").hide();
+    $("#nextSrc").hide();
+
+});
+
+function searchBCLByDate(from) {
+	
+	var fDate = $("#fromDate").val();
+	var tDate = $("#toDate").val();
+	if((fDate== null || fDate== "") || (tDate== null || tDate== "")){
+		alert("Please insert From(date) and To(date) before Search");
+	}else{
+		 //alert($("#searchField").val());
+	    $.ajax('@@{Beneficiaries.beneficiaryChangeLogDateWise()}', {
+	        type: 'POST',
+	        data: {
+	            fromDate: $("#fromDate").val(),
+	            toDate: $("#toDate").val(),
+	            from: from
+	        }
+	    }).done(function(data) {
+	        var rowCount = $('#dataTable tr').length;
+
+	        for (i = 1; i < rowCount; i++) {
+	            document.getElementById("dataTable").deleteRow(1);
+	        }
+
+	        for (j = 0; j < data.length; j++) {
+	            var table = document.getElementById("dataTable");
+	            var row = table.insertRow(1);
+	            var cell1 = row.insertCell(0);
+	            var cell2 = row.insertCell(1);
+	            var cell3 = row.insertCell(2);
+	            var cell4 = row.insertCell(3);
+	            var cell5 = row.insertCell(4);
+	            var cell6 = row.insertCell(5);
+	            var cell7 = row.insertCell(6);
+	            var cell8 = row.insertCell(7);
+
+
+	            cell1.innerHTML = data[j].UID? data[j].UID : "";
+	            cell2.innerHTML = data[j].fieldName? data[j].fieldName : "";
+	            cell3.innerHTML = data[j].oldValue? data[j].oldValue : "";
+	            cell4.innerHTML = data[j].newValue? data[j].newValue : "" ;
+	            cell5.innerHTML = data[j].updatedBy? data[j].updatedBy : "";
+	            cell6.innerHTML = data[j].created_at? data[j].created_at : "" ;
+	            cell7.innerHTML = data[j].reason? data[j].reason : "" ;
+	            cell8.innerHTML = data[j].remarks? data[j].remarks : "" ;
+	}
+         searchFrom = from;
+        activateNextSearchBtn(); 
+        
+        //$("#dataDiv").text(data[0].UID);
+    }).error(function() {
+        //alert('Error');
+    });
+    
+	}
+}
+
+function activateNextSearchBtn() {
+	$("#prev").hide();
+    $("#next").hide();
+    $("#prevSrc").show();
+    $("#nextSrc").show();
+    
+    if (parseInt(searchFrom) < 10) {
+        document.getElementById("prevSrc").disabled = true;
+    } else {
+        document.getElementById("prevSrc").disabled = false;
+    }
+    
+    var rowQnt = $('#dataTable tr').length;
+    
+    if (parseInt(rowQnt) < 10) {
+        document.getElementById("nextSrc").disabled = true;
+    } else {
+        document.getElementById("nextSrc").disabled = false;
+    }
+    
+}
+
+function next() {
+  var url_string = window.location.href;
+  var url = new URL(url_string);
+  var from_pos = url.searchParams.get("from");
+  var count = url.searchParams.get("count");
+
+  if (parseInt(from_pos) < 0) {
+      from_pos = 0;
+  }
+
+  var new_from = 10 + parseInt(from_pos);
+
+
+
+  var new_url_string = "/beneficiaries/beneficiarychangelog?count=" + count + "&from=" + new_from;
+  window.location = new_url_string;
+
+}
+
+function previous() {
+  var url_string = window.location.href;
+  var url = new URL(url_string);
+  var from_pos = url.searchParams.get("from");
+  var count = url.searchParams.get("count");
+
+
+  var new_from = parseInt(from_pos) - 10;
+
+
+  var new_url_string = "/beneficiaries/beneficiarychangelog?count=" + count + "&from=" + new_from;
+  window.location = new_url_string;
+
+}
+
+function prevSearch(){
+	searchFrom = searchFrom >= 10? (searchFrom- 10) : 0;
+	searchBCLByDate(searchFrom);
+}
+
+function nextSearch(){
+	searchFrom += 10;
+	searchBCLByDate(searchFrom);
+	
+	if (parseInt(searchFrom) < 10) {
+      document.getElementById("prevSrc").disabled = true;
+  } else {
+      document.getElementById("prevSrc").disabled = false;
+  }
+}
+
+
+</script>
+  

@@ -1,0 +1,160 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                               		Reports.summaryView
+GET		/index										Application.index
+GET		/clear									Application.clear
+GET     /schedule-list                         	Scheduling.index
+GET     /field-status                         	Interviews.index
+POST    /field-status                         	Interviews.indexByForm
+GET		/summary-view							Reports.summaryView
+
+#Reports
+GET	/reports/pregnancy/list				Reports.listPregnancy
+GET 	/reports/mwra/list					Reports.listMWRA
+GET /summaryView						Reports.summaryView(format:'json')
+POST /summaryView						Reports.summaryView(format:'json')
+
+#Forms
+GET		/form/list								Forms.list
+GET		/form/new                          		Forms.create
+POST	/form/new								Forms.submit
+GET		/form/edit/{id}							Forms.edit
+POST	/form/edit/{id}							Forms.submit
+GET		/form/view/{id}							Forms.details
+GET		/form/view/{id}/statuses				Forms.statuses
+POST	/form/view/{id}/statuses             	Forms.addStatus
+GET		/form/view/{id}/logics					Forms.logics
+POST	/form/view/{id}/logics					Forms.addLogic
+GET		/form/cancel							Forms.cancelDuration
+POST	/form/cancel							Forms.saveCancelDuration
+
+# Users
+GET		/user/list								Users.list
+GET		/user/view/{id}							Users.details
+GET		/user/new								Users.create
+GET		/user/edit/{id}							Users.edit
+POST	/user/edit/{id}							Users.submit
+GET		/role/list								Users.roleList
+GET		/role/new								Users.roleCreate
+POST	/role/edit/{id}							Users.roleSubmit
+GET		/role/edit/{id}							Users.roleEdit
+POST	/ajax/user/tlpin/assign					Users.assignTLPin
+POST	/ajax/permission						Users.updatePermission
+
+# Android Interface XML
+GET     /m/formList/?							Mobile.listAsXml
+*	/m/submission/?							Mobile.submit
+GET     /m/formXml/{<[0-9]+>id}/?				Mobile.viewAsXml
+
+
+#Beneficiary Edit & Log
+GET	 /beneficiaryChangeLog/{from}/{count}				Beneficiaries.beneficiaryChangeLog(format:'json')
+POST /beneficiaryChangeLog/{fromDate}/{toDate}/{from}	Beneficiaries.beneficiaryChangeLogDateWise(format:'json')
+GET	 /osrpTransferLog							Beneficiaries.osrpTransferLog(format:'json')
+GET	 /listBeneficiary							Beneficiaries.listBeneficiary(format:'json')
+POST /listBeneficiary/{searchInput}/{from}		Beneficiaries.searchBeneficiary(format:'json')
+
+#REST APIs
+GET	/getHousehold								Apis.getHousehold(format:'json')
+GET	/getBeneficiary								Apis.getBeneficiary(format:'json')
+
+#APIs
+GET /m/login									Users.mLogin
+GET	/m/household-list							Households.mListHousehold(format:'json')
+GET	/m/fd-schedule								Scheduling.mListSchedule(format:'json')
+GET	/m/nwvm-new-uid								Beneficiaries.getNewUIDForWoman(format:'json')
+GET	/m/nwvm-previous-uid						Beneficiaries.getExistingWoman(format:'json')
+GET /m/getlmp									Scheduling.mLmpfromUid(format:'json')
+GET /m/getResponseForANCF						Scheduling.getResponseForANCF(format:'json')
+GET	/m/tli-schedule								Scheduling.mListTLISchedule(format:'json')
+GET	/m/nwvm-start								Scheduling.mGetNWVM(format:'json')
+POST /m/nwvm-submit								Scheduling.mPostNWVM(format:'json')
+GET	 /m/gisv-tli								Scheduling.mGetGISV(format:'json')
+POST	/m/gisv-submit							Scheduling.mPostGISV(format:'json')
+GET	/m/pmv-start								Scheduling.mGetPMV(format:'json')
+GET /m/child-info								Beneficiaries.mGetChildInfo(format:'json')
+GET	/m/post-householdid							Households.tagHousehold(format:'json')
+GET /m/check-householdid						Households.checkHousehold(format:'json')
+GET /m/delete-householdid						Households.deleteHousehold(format:'json')
+
+GET     /m/interview							Interviews.mGetAll(format:'json')
+POST	/m/interview							Interviews.mPostInterview(format:'json')
+
+GET     /m/totalSchedule						Scheduling.mTotalSchedule(format:'json')
+
+GET     /m/dtf									Interviews.mDTF(format:'json')
+POST    /m/dtf									Interviews.mPostDTF(format:'json')
+
+POST 	/m/interview/active						Interviews.mSetActive(format:'json')
+GET 	/m/sector/active						Interviews.mGetActive(format:'json')
+GET 	/m/finduser								Users.mFindUser(format:'json')
+GET 	/m/refusal								Interviews.mRefusal(format:'json')
+POST 	/m/refusal								Interviews.mPostRefusal(format:'json')
+POST	/m/form									Interviews.mPostInterview(format:'json')
+GET		/m/mother_info							Interviews.mGetWomanInfo
+#GET		/m/psf								Interviews.mGetWomanInfo
+# Ignore favicon requests
+GET     /favicon.ico                            404
+
+#Application Notification
+GET		/m/notification						    Notifications.getNotification(format:'json')
+GET		/m/mjivitaplus/1						Notifications.getNotification(format:'json')
+POST    /s/alert							    Notifications.mPostAlert(format:'json')
+
+# Area
+GET		/union/new								Areas.createGeoUnion
+GET		/union/edit/{id}						Areas.editGeoUnion
+GET		/union/list								Areas.listGeoUnion
+POST	/union/save								Areas.submitGeoUnion
+GET		/acarea/new								Areas.createACArea
+GET		/acarea/edit/{id}						Areas.editACArea
+GET		/acarea/list							Areas.listACArea
+POST	/acarea/save							Areas.submitACArea
+GET		/tlpin/new								Areas.createTLPin
+GET		/tlpin/edit/{id}						Areas.editTLPin
+GET		/tlpin/list								Areas.listTLPin
+POST	/tlpin/save								Areas.submitTLPin
+GET		/sector/new								Areas.createSector
+GET		/sector/edit/{id}						Areas.editSector
+GET		/sector/list							Areas.listSector
+POST	/sector/save							Areas.submitSector
+GET		/mauza/new								Areas.createMauza
+GET		/mauza/edit/{id}						Areas.editMauza
+GET		/mauza/list								Areas.listMauza
+POST	/mauza/save								Areas.submitMauza
+GET		/batch/new								Areas.createBatch
+GET		/batch/edit/{id}						Areas.editBatch
+GET		/batch/list								Areas.listBatch
+POST	/batch/save								Areas.submitBatch
+GET		/round/new								Areas.createRound
+GET		/round/edit/{id}						Areas.editRound
+GET		/round/list								Areas.listRound
+GET		/round/detail							Areas.detailRound
+POST	/round/save								Areas.submitRound
+GET		/jweek/new								Areas.createJWeek
+GET		/jweek/edit/{id}						Areas.editJWeek
+GET		/jweek/list								Areas.listJWeek
+POST	/jweek/save								Areas.submitJWeek
+
+GET		/import									Imports.importCSV
+
+POST	/export									ExportController.export
+GET		/getfile						    	ExportController.serveFile
+GET		/exports/list							ExportController.exportList
+
+GET		/retransmit/{id}						RetransmitData.index
+
+# Map static resources from the /app/public folder to the /public path
+GET     /public/                                staticDir:public
+GET     /uploads/                               staticDir:uploads
+GET  /adapter                                   OpenSRPAdapter.adapterResponse()
+
+# Test
+GET  /test/{id}                                 Apis.testDocument(id : Long)
+#GET  /adapter                                   Apis.adapterResponse()
+# Catch all
+*       /{controller}/{action}                  {controller}.{action}
+
