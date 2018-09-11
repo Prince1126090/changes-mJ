@@ -1,0 +1,160 @@
+#{extends 'main.html' /}
+#{set title:'Open SRP Transfer Log' /}
+
+
+<div class="span4 clearfix">
+                    <label>From<i class="muted">(mm/dd/yyyy)</i></label>
+                    <div class="input">
+                        <div class="inline-inputs">
+                            <input name="fromDate" id="fromDate" data-datepicker="datepicker"
+                             class="input-medium" value=${fromDateStr} />
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="span4 clearfix">
+                    <label>To<i class="muted">(mm/dd/yyyy)</i></label>
+                    <div class="input">
+                        <div class="inline-inputs">
+                            <input name="toDate" id="toDate" data-datepicker="datepicker" 
+                            class="small input-medium" value=${toDateStr} />
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="span4 clearfix">
+                  <label><i class="muted">.</i></label>
+                    <div class="input">
+                        <div class="inline-inputs">
+                          <button class="btn" onclick="osrpTransferLogDatewise()">Show</button>
+                        </div>
+                    </div>
+                </div>
+  #{set 'moreScripts'}
+    #{script 'bootstrap-datepicker_latest.js' /}
+    #{script 'jquery.mpower.utils.js' /}
+    #{script 'jquery-mpower-date.js' /}
+    #{script 'mpower-geolocation.js' /}
+#{/set}
+
+<!-- datepicker CSS -->
+#{set 'moreStyles'}
+    #{stylesheet 'datepicker_latest.css'/}
+#{/set}
+
+
+<p id="resultList">${resultList}</p>
+
+<div id="container" style="min-width: 300px; height: 400px; margin: 0 auto"></div>
+
+<script type="text/javascript" language="javascript"  src="/public/javascripts/highcharts/highcharts.js"></script>
+<script type="text/javascript" language="javascript"  src="/public/javascripts/highcharts/exporting.js"></script>
+<script type="text/javascript" language="javascript"  src="/public/javascripts/highcharts/export-data.js"></script>
+
+<script type="text/javascript"> 
+var rl=zeros([3, 2]);
+
+$(document).ready(function() {
+	rl = JSON.parse($("#resultList")[0].innerHTML);
+	showChart();
+
+});
+
+function zeros(dimensions) {
+    var array = [];
+
+    for (var i = 0; i < dimensions[0]; ++i) {
+        array.push(dimensions.length == 1 ? 0 : zeros(dimensions.slice(1)));
+    }
+
+    return array;
+}
+
+function showChart(){
+
+	rl[0][0]= "HHUpdate";
+	rl[1][0]= "CensusEnrollment";
+	rl[2][0]= "PSRF";
+	rl[3][0]= "PVF";
+	
+	$("#resultList").hide();
+	
+	Highcharts.chart('container', {
+	    chart: {
+	        type: 'column'
+	    },
+	    title: {
+	        text: 'Open SRP Transfer Log'
+	    },
+	    xAxis: {
+	        type: 'category',
+	        labels: {
+	            rotation: -45,
+	            style: {
+	                fontSize: '13px',
+	                fontFamily: 'Verdana, sans-serif'
+	            }
+	        }
+	    },
+	    yAxis: {
+	        min: 0,
+	        title: {
+	            text: 'Transferred quantity'
+	        }
+	    },
+	    legend: {
+	        enabled: false
+	    },
+	    tooltip: {
+	        pointFormat: 'Transferred quantity : <b>{point.y:.0f} </b>'
+	    },
+	    series: [{
+	        name: 'Population',
+	        
+	         data: rl,
+	       // data: ${result},
+	        dataLabels: {
+	            enabled: true,
+	            rotation: -90,
+	            color: '#FFFFFF',
+	            align: 'right',
+	            format: '{point.y:.0f}', // .1f = one decimal
+	            y: 10, // 10 pixels down from the top
+	            style: {
+	                fontSize: '13px',
+	                fontFamily: 'Verdana, sans-serif'
+	            }
+	        }
+	    }]
+	});
+}
+
+function osrpTransferLogDatewise(){
+	
+	var fromDate = $("#fromDate").val();
+	var toDate = $("#toDate").val();
+	
+	$.ajax('@@{Beneficiaries.osrpTransferLogDateWise()}', {
+        type: 'POST',
+        data: {
+        	fromDate : fromDate,
+        	toDate : toDate
+        }
+    }).done(function(data) {
+    	
+    	for(i=0;i<4;i++){
+    		if(typeof data[i] === 'undefined') {
+    			rl[i][1] = 0;
+    		}
+    		else {
+    			rl[i][1] = data[i][1]? data[i][1] : 0;
+    		}
+    		
+    	}
+    	showChart();
+    	
+    }).error(function() {
+        //alert('Error');
+    });
+}
+</script>
